@@ -7,13 +7,30 @@ import SkillTree from './components/Pages/SkillTree'
 import SkillTreeConstructor from './components/Pages/SkillTreeConstructor'
 import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
-import Loading from './components/Loading'
+
+// Estilos básicos inline como respaldo
+const appStyles = {
+  minHeight: '100vh',
+  backgroundColor: '#1a1a2e',
+  color: '#e6e6e6'
+}
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
   
   if (loading) {
-    return <Loading />
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        backgroundColor: '#1a1a2e',
+        color: '#e94560'
+      }}>
+        Cargando...
+      </div>
+    )
   }
   
   return user ? children : <Navigate to="/login" />
@@ -23,7 +40,18 @@ function PublicRoute({ children }) {
   const { user, loading } = useAuth()
   
   if (loading) {
-    return <Loading />
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        backgroundColor: '#1a1a2e',
+        color: '#e94560'
+      }}>
+        Cargando...
+      </div>
+    )
   }
   
   return !user ? children : <Navigate to="/" />
@@ -34,7 +62,7 @@ function AppContent() {
 
   return (
     <Router>
-      <div className="app">
+      <div style={appStyles}>
         {user && <Navbar />}
         <Routes>
           <Route path="/login" element={

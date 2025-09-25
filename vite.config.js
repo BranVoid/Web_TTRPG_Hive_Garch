@@ -8,7 +8,20 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false
+    sourcemap: false,
+    minify: 'terser', // Cambia a terser en lugar de esbuild
+    cssMinify: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          supabase: ['@supabase/supabase-js']
+        }
+      }
+    }
   },
-  base: './'
+  base: '/',
+  css: {
+    devSourcemap: false
+  }
 })
