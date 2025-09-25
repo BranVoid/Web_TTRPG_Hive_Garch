@@ -7,12 +7,13 @@ import SkillTree from './components/Pages/SkillTree'
 import SkillTreeConstructor from './components/Pages/SkillTreeConstructor'
 import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
+import Loading from './components/Loading'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
   
   if (loading) {
-    return <div className="loading">Cargando...</div>
+    return <Loading />
   }
   
   return user ? children : <Navigate to="/login" />
@@ -22,7 +23,7 @@ function PublicRoute({ children }) {
   const { user, loading } = useAuth()
   
   if (loading) {
-    return <div className="loading">Cargando...</div>
+    return <Loading />
   }
   
   return !user ? children : <Navigate to="/" />
