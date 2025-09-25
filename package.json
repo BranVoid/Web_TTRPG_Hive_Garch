@@ -1,5 +1,5 @@
 {
-  "name": "hive-garch",
+  "name": "web-ttprg-hive-garch",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.58.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-force-graph": "^1.48.1",
     "react-force-graph-2d": "^1.29.0",
     "react-router-dom": "^7.9.2"
   },
