@@ -7,6 +7,8 @@ import SkillTree from './components/Pages/SkillTree'
 import SkillTreeConstructor from './components/Pages/SkillTreeConstructor'
 import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
+import Profile from './components/Pages/Profile'
+import Map from './components/Pages/Map'
 
 // Estilos básicos inline como respaldo
 const appStyles = {
@@ -90,7 +92,19 @@ function AppContent() {
               <SkillTreeConstructor />
             </ProtectedRoute>
           } />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/map" element={
+            <ProtectedRoute>
+              <Map />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={
+            <Navigate to="/" />
+          } />
         </Routes>
       </div>
     </Router>
