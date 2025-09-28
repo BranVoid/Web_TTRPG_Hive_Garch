@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../../utils/supabaseClient';
+import { supabase } from '../utils/supabaseClient';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -9,7 +9,6 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -52,13 +51,30 @@ const Register = () => {
 
       if (authError) throw authError;
 
-      if (!authData.user) {
-        throw new Error('No se pudo crear el usuario');
+      if (authData.user) {
+        // Crear perfil en la tabla profiles
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: authData.user.id,
+              email: email.trim(),
+              username: name.trim().toLowerCase().replace(/\s+/g, '_'),
+              character_name: name.trim(),
+              created_at: new Date().toISOString()
+            }
+          ]);
+
+        if (profileError) {
+          console.error('Error creando perfil:', profileError);
+          // No lanzamos error aquí porque el usuario ya fue creado en auth
+        }
       }
 
-      console.log('Usuario creado:', authData.user.id);
-      setSuccess(true);
-
+      // Mostrar mensaje de éxito
+      alert('¡Registro exitoso! Por favor, verifica tu correo electrónico para activar tu cuenta.');
+      navigate('/login');
+      
     } catch (error) {
       console.error('Registration error:', error);
       setError(error.message || 'Error al registrar la cuenta');
@@ -66,35 +82,6 @@ const Register = () => {
       setLoading(false);
     }
   };
-
-  // Si el registro fue exitoso, mostrar mensaje de éxito
-  if (success) {
-    return (
-      <div className="auth-container">
-        <div className="auth-form" style={{ textAlign: 'center' }}>
-          <h2>¡Registro Exitoso! 🎉</h2>
-          <div style={{ 
-            background: 'rgba(46, 139, 87, 0.2)', 
-            color: '#2E8B57',
-            padding: '1rem',
-            borderRadius: '4px',
-            marginBottom: '1rem'
-          }}>
-            <p>✅ Se ha enviado un enlace de verificación a tu correo electrónico.</p>
-            <p>Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.</p>
-            <p><strong>El perfil se creará automáticamente cuando actives tu cuenta.</strong></p>
-          </div>
-          <button 
-            onClick={() => navigate('/login')} 
-            className="auth-button"
-            style={{ marginTop: '1rem' }}
-          >
-            Ir al Inicio de Sesión
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="auth-container">
@@ -104,11 +91,7 @@ const Register = () => {
           Únete a La Colmena de Garch
         </p>
         
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
+        {error && <div className="error-message">{error}</div>}
 
         <div className="form-group">
           <label htmlFor="name">
